@@ -8,7 +8,8 @@
 
     <title>Akash's RTCM Demo</title>
 
-    <meta name="description" content="Share audio, video along with text chat and filesharing using RTCMultiConnection" />
+    <meta name="description"
+        content="Share audio, video along with text chat and filesharing using RTCMultiConnection" />
     <meta name="keywords" content="WebRTC,RTCMultiConnection,Demos,Experiments,Samples,Examples" />
 
     <style>
@@ -16,7 +17,7 @@
             object-fit: fill;
             width: 30%;
         }
-        
+
         button,
         input,
         select {
@@ -28,7 +29,7 @@
             font-size: 16px;
             outline: none;
         }
-        
+
         .make-center {
             text-align: center;
             padding: 5px 10px;
@@ -53,7 +54,9 @@
                 <br><br>
                 <button id="btn-leave-room" disabled>Leave /or close the room</button>
 
-                <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
+                <div id="room-urls"
+                    style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;">
+                </div>
             </div>
             <div id="chat-container">
                 <div id="file-container"></div>
@@ -71,8 +74,8 @@
         <script src="https://cdn.webrtc-experiment.com:443/FileBufferReader.js"></script>
         <script src="https://webrtcexperiment-webrtc.netdna-ssl.com/MediaStreamRecorder.js"></script>
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-storage.js"></script>
         <script src="https://cdn.webrtc-experiment.com/hark.js"></script>
@@ -184,7 +187,7 @@
             var connection = new RTCMultiConnection();
             connection.enableLogs = true;
             // by default, socket.io server is assumed to be deployed on your own URL
-            connection.socketURL = 'https://7f6e4c15.ngrok.io/';
+            // connection.socketURL = 'https://7f6e4c15.ngrok.io/';
 
             // comment-out below line if you do not have your own socket.io server
             // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
