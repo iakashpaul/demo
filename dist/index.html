@@ -62,9 +62,10 @@
                 <div id="file-container"></div>
 
             </div>
+            <div id="recordings-container"></div>
             <div id="videos-container"></div>
             <div class="chat-output"></div>
-            <div id="recordings-container"></div>
+
         </section>
         <!-- <script src="https://rtcmulticonnection.herokuapp.com/dist/RTCMultiConnection.js"></script> -->
 
@@ -213,7 +214,7 @@
                 var width = parseInt(connection.videosContainer.clientWidth / 2) - 20;
                 var mediaElement = getMediaElement(event.mediaElement, {
                     title: event.userid,
-                    buttons: ['mute-audio', 'mute-video', 'volume-slider', 'stop'],
+                    // buttons: ['mute-audio', 'mute-video', 'volume-slider', 'stop'],
                     width: width,
                     showOnMouseEnter: false
                 });
@@ -265,7 +266,7 @@
                             controls: true
                         });
                         recordingsContainer.appendChild(a);
-                        video.appendTo($('#recordings-container'));
+                        // video.appendTo($('#recordings-container'));
                         recordingsContainer.appendChild(video);
                         // recordingsContainer.appendChild(document.createElement('hr'));
                     };
