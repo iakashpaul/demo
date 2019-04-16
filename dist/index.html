@@ -260,7 +260,7 @@
                         a.href = URL.createObjectURL(blob);
                         var video = $('<video />', {
                             id: 'video',
-                            src: blobURL,
+                            srcObject: blobURL,
                             type: 'video/webm',
                             controls: true
                         });
