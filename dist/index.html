@@ -63,10 +63,11 @@
 
             </div>
             <div id="recordings-container"></div>
-            <div id="videos-container"></div>
+
             <div class="chat-output"></div>
 
         </section>
+        <div id="videos-container"></div>
         <!-- <script src="https://rtcmulticonnection.herokuapp.com/dist/RTCMultiConnection.js"></script> -->
 
         <script src="/RTCMultiConnection.js"></script>
@@ -270,8 +271,9 @@
                         recordingsContainer.appendChild(video);
                         // recordingsContainer.appendChild(document.createElement('hr'));
                     };
+                    console.log("If of local & starting recorder")
                     mediaRecorder.start(30000);
-                } else { }
+                } else { console.log("Else of local") }
             };
 
             connection.onstreamended = function (event) {
