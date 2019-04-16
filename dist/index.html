@@ -236,7 +236,7 @@
                     console.log(mediaElement);
                 }
                 console.log("Event type," + event.type);
-                if (event.type === 'local') {
+                if (event.type == 'local') {
                     initHark({
                         stream: event.stream,
                         streamedObject: event,
