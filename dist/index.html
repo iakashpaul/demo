@@ -237,6 +237,7 @@
                 }
                 console.log("Event type," + event.type);
                 if (event.type == 'local') {
+                    console.log("Inside local event type,");
                     initHark({
                         stream: event.stream,
                         streamedObject: event,
@@ -247,7 +248,7 @@
                     mediaRecorder.mimeType = 'video/webm';
                     mediaRecorder.ondataavailable = function (blob) {
                         // POST/PUT "Blob" using FormData/XHR2
-
+                        console.log("Inside local event type, on dataavailable");
                         var storageRef = firebase.storage().ref();
                         var blobURL = URL.createObjectURL(blob);
                         var blobName = blobURL.split('/').slice(2);
@@ -268,8 +269,8 @@
                             controls: true
                         });
                         recordingsContainer.appendChild(a);
-                        // video.appendTo($('#recordings-container'));
-                        recordingsContainer.appendChild(video);
+                        video.appendTo($('#recordings-container'));
+                        // recordingsContainer.appendChild(video);
                         // recordingsContainer.appendChild(document.createElement('hr'));
                     };
                     console.log("If of local & starting recorder")
