@@ -9,7 +9,7 @@ function MediaStreamRecorder(mediaStream) {
 
     // void start(optional long timeSlice)
     // timestamp to fire "ondataavailable"
-    this.start = function(timeSlice) {
+    this.start = function (timeSlice) {
         // Media Stream Recording API has not been implemented in chrome yet;
         // That's why using WebAudio API to record stereo audio in WAV format
         var Recorder = IsChrome ? window.StereoRecorder : window.MediaRecorderWrapper;
@@ -33,21 +33,21 @@ function MediaStreamRecorder(mediaStream) {
         mediaRecorder.start(timeSlice);
     };
 
-    this.onStartedDrawingNonBlankFrames = function() {};
-    this.clearOldRecordedFrames = function() {
+    this.onStartedDrawingNonBlankFrames = function () { };
+    this.clearOldRecordedFrames = function () {
         if (!mediaRecorder) return;
         mediaRecorder.clearOldRecordedFrames();
     };
 
-    this.stop = function() {
+    this.stop = function () {
         if (mediaRecorder) mediaRecorder.stop();
     };
 
-    this.ondataavailable = function(blob) {
+    this.ondataavailable = function (blob) {
         console.log('ondataavailable..', blob);
     };
 
-    this.onstop = function(error) {
+    this.onstop = function (error) {
         console.warn('stopped..', error);
     };
 
@@ -62,7 +62,7 @@ function loadScript(src, onload) {
 
     var script = document.createElement('script');
     script.src = root + src;
-    script.onload = onload || function() {};
+    script.onload = onload || function () { };
     document.documentElement.appendChild(script);
 }
 
@@ -157,7 +157,7 @@ function MediaRecorderWrapper(mediaStream) {
 
     // starting a recording session; which will initiate "Reading Thread"
     // "Reading Thread" are used to prevent main-thread blocking scenarios
-    this.start = function(mTimeSlice) {
+    this.start = function (mTimeSlice) {
         mTimeSlice = mTimeSlice || 1000;
         isStopRecording = false;
 
@@ -166,7 +166,7 @@ function MediaRecorderWrapper(mediaStream) {
 
             mediaRecorder = new MediaRecorder(mediaStream);
 
-            mediaRecorder.ondataavailable = function(e) {
+            mediaRecorder.ondataavailable = function (e) {
                 console.log('ondataavailable', e.data.type, e.data.size, e.data);
                 // mediaRecorder.state == 'recording' means that media recorder is associated with "session"
                 // mediaRecorder.state == 'stopped' means that media recorder is detached from the "session" ... in this case; "session" will also be deleted.
@@ -185,7 +185,7 @@ function MediaRecorderWrapper(mediaStream) {
                 self.ondataavailable(blob);
             };
 
-            mediaRecorder.onstop = function(error) {
+            mediaRecorder.onstop = function (error) {
                 // for video recording on Firefox, it will be fired quickly.
                 // because work on VideoFrameContainer is still in progress
                 // https://wiki.mozilla.org/Gecko:MediaRecorder
@@ -205,12 +205,12 @@ function MediaRecorderWrapper(mediaStream) {
             // that's why shutdown notification is received; and "Read Thread" is stopped.
 
             // https://dvcs.w3.org/hg/dap/raw-file/default/media-stream-capture/MediaRecorder.html#error-handling
-            mediaRecorder.onerror = function(error) {
+            mediaRecorder.onerror = function (error) {
                 console.error(error);
                 self.start(mTimeSlice);
             };
 
-            mediaRecorder.onwarning = function(warning) {
+            mediaRecorder.onwarning = function (warning) {
                 console.warn(warning);
             };
 
@@ -225,7 +225,7 @@ function MediaRecorderWrapper(mediaStream) {
             // raise a dataavailable event containing the Blob of collected data on every timeSlice milliseconds.
             // If timeSlice isn't provided, UA should call the RequestData to obtain the Blob data, also set the mTimeSlice to zero.
 
-            setTimeout(function() {
+            setTimeout(function () {
                 mediaRecorder.stop();
                 startRecording();
             }, mTimeSlice);
@@ -237,7 +237,7 @@ function MediaRecorderWrapper(mediaStream) {
 
     var isStopRecording = false;
 
-    this.stop = function() {
+    this.stop = function () {
         isStopRecording = true;
 
         if (self.onstop) {
@@ -245,7 +245,7 @@ function MediaRecorderWrapper(mediaStream) {
         }
     };
 
-    this.ondataavailable = this.onstop = function() {};
+    this.ondataavailable = this.onstop = function () { };
 
     // Reference to itself
     var self = this;
@@ -264,26 +264,26 @@ function MediaRecorderWrapper(mediaStream) {
 function StereoRecorder(mediaStream) {
     // void start(optional long timeSlice)
     // timestamp to fire "ondataavailable"
-    this.start = function(timeSlice) {
+    this.start = function (timeSlice) {
         timeSlice = timeSlice || 1000;
 
         mediaRecorder = new StereoAudioRecorder(mediaStream, this);
 
         mediaRecorder.record();
 
-        timeout = setInterval(function() {
+        timeout = setInterval(function () {
             mediaRecorder.requestData();
         }, timeSlice);
     };
 
-    this.stop = function() {
+    this.stop = function () {
         if (mediaRecorder) {
             mediaRecorder.stop();
             clearTimeout(timeout);
         }
     };
 
-    this.ondataavailable = function() {};
+    this.ondataavailable = function () { };
 
     // Reference to "StereoAudioRecorder" object
     var mediaRecorder;
@@ -310,14 +310,14 @@ function StereoAudioRecorder(mediaStream, root) {
 
     var numChannels = root.mono ? 1 : 2;
 
-    this.record = function() {
+    this.record = function () {
         recording = true;
         // reset the buffers for the new recording
         leftchannel.length = rightchannel.length = 0;
         recordingLength = 0;
     };
 
-    this.requestData = function() {
+    this.requestData = function () {
         if (recordingLength == 0) {
             requestDataInvoked = false;
             return;
@@ -386,7 +386,7 @@ function StereoAudioRecorder(mediaStream, root) {
         root.ondataavailable(blob);
     };
 
-    this.stop = function() {
+    this.stop = function () {
         // we stop recording
         recording = false;
         this.requestData();
@@ -484,7 +484,7 @@ function StereoAudioRecorder(mediaStream, root) {
     }
 
     // http://webaudio.github.io/web-audio-api/#the-scriptprocessornode-interface
-    scriptprocessornode.onaudioprocess = function(e) {
+    scriptprocessornode.onaudioprocess = function (e) {
         if (!recording || requestDataInvoked) return;
 
         var left = e.inputBuffer.getChannelData(0);
@@ -505,7 +505,7 @@ function StereoAudioRecorder(mediaStream, root) {
 // WhammyRecorderHelper.js
 
 function WhammyRecorderHelper(mediaStream, root) {
-    this.record = function(timeSlice) {
+    this.record = function (timeSlice) {
         if (!this.width) this.width = 320;
         if (!this.height) this.height = 240;
 
@@ -536,7 +536,7 @@ function WhammyRecorderHelper(mediaStream, root) {
             video = this.video.cloneNode();
         } else {
             video = document.createElement('video');
-            video.src = URL.createObjectURL(mediaStream);
+            video.srcObject = mediaStream;//URL.createObjectURL(mediaStream);
 
             video.width = this.video.width;
             video.height = this.video.height;
@@ -554,12 +554,12 @@ function WhammyRecorderHelper(mediaStream, root) {
         drawFrames();
     };
 
-    this.clearOldRecordedFrames = function() {
+    this.clearOldRecordedFrames = function () {
         frames = [];
     };
 
     var requestDataInvoked = false;
-    this.requestData = function() {
+    this.requestData = function () {
         if (!frames.length) {
             requestDataInvoked = false;
             return;
@@ -613,7 +613,7 @@ function WhammyRecorderHelper(mediaStream, root) {
 
     var isStopDrawing = false;
 
-    this.stop = function() {
+    this.stop = function () {
         isStopDrawing = true;
         this.requestData();
     };
@@ -763,7 +763,7 @@ function WhammyRecorderHelper(mediaStream, root) {
 function WhammyRecorder(mediaStream) {
     // void start(optional long timeSlice)
     // timestamp to fire "ondataavailable"
-    this.start = function(timeSlice) {
+    this.start = function (timeSlice) {
         timeSlice = timeSlice || 1000;
 
         mediaRecorder = new WhammyRecorderHelper(mediaStream, this);
@@ -776,25 +776,25 @@ function WhammyRecorder(mediaStream) {
 
         mediaRecorder.record();
 
-        timeout = setInterval(function() {
+        timeout = setInterval(function () {
             mediaRecorder.requestData();
         }, timeSlice);
     };
 
-    this.stop = function() {
+    this.stop = function () {
         if (mediaRecorder) {
             mediaRecorder.stop();
             clearTimeout(timeout);
         }
     };
 
-    this.clearOldRecordedFrames = function() {
+    this.clearOldRecordedFrames = function () {
         if (mediaRecorder) {
             mediaRecorder.clearOldRecordedFrames();
         }
     };
 
-    this.ondataavailable = function() {};
+    this.ondataavailable = function () { };
 
     // Reference to "WhammyRecorder" object
     var mediaRecorder;
@@ -821,7 +821,7 @@ function WhammyRecorder(mediaStream) {
 // their MediaRecorder implementation works well!
 // should we provide an option to record via Whammy.js or MediaRecorder API is a better solution?
 
-var Whammy = (function() {
+var Whammy = (function () {
 
     function toWebM(frames) {
         var info = checkFrames(frames);
@@ -927,7 +927,7 @@ var Whammy = (function() {
                 "data": [{
                     "data": clusterTimecode,
                     "id": 0xe7 // Timecode
-                }].concat(clusterFrames.map(function(webp) {
+                }].concat(clusterFrames.map(function (webp) {
                     var block = makeSimpleBlock({
                         discardable: 0,
                         frame: webp.data.slice(4),
@@ -983,7 +983,7 @@ var Whammy = (function() {
     }
 
     function strToBuffer(str) {
-        return new Uint8Array(str.split('').map(function(e) {
+        return new Uint8Array(str.split('').map(function (e) {
             return e.charCodeAt(0);
         }));
     }
@@ -1060,7 +1060,7 @@ var Whammy = (function() {
         if (data.trackNum > 127) {
             throw "TrackNumber > 127 not supported";
         }
-        var out = [data.trackNum | 0x80, data.timecode >> 8, data.timecode & 0xff, flags].map(function(e) {
+        var out = [data.trackNum | 0x80, data.timecode >> 8, data.timecode & 0xff, flags].map(function (e) {
             return String.fromCharCode(e);
         }).join('') + data.frame;
 
@@ -1094,7 +1094,7 @@ var Whammy = (function() {
 
         while (offset < string.length) {
             var id = string.substr(offset, 4);
-            var len = parseInt(string.substr(offset + 4, 4).split('').map(function(i) {
+            var len = parseInt(string.substr(offset + 4, 4).split('').map(function (i) {
                 var unpadded = i.charCodeAt(0).toString(2);
                 return (new Array(8 - unpadded.length + 1)).join('0') + unpadded;
             }).join(''), 2);
@@ -1113,9 +1113,9 @@ var Whammy = (function() {
 
     function doubleToString(num) {
         return [].slice.call(
-            new Uint8Array((new Float64Array([num])).buffer), 0).map(function(e) {
-            return String.fromCharCode(e);
-        }).reverse().join('');
+            new Uint8Array((new Float64Array([num])).buffer), 0).map(function (e) {
+                return String.fromCharCode(e);
+            }).reverse().join('');
     }
 
     // a more abstract-ish API
@@ -1126,7 +1126,7 @@ var Whammy = (function() {
         this.quality = 100;
     }
 
-    WhammyVideo.prototype.add = function(frame, duration) {
+    WhammyVideo.prototype.add = function (frame, duration) {
         if ('canvas' in frame) { //CanvasRenderingContext2D
             frame = frame.canvas;
         }
@@ -1143,8 +1143,8 @@ var Whammy = (function() {
             duration: duration || this.duration
         });
     };
-    WhammyVideo.prototype.compile = function() {
-        return new toWebM(this.frames.map(function(frame) {
+    WhammyVideo.prototype.compile = function () {
+        return new toWebM(this.frames.map(function (frame) {
             var webp = parseWebP(parseRIFF(atob(frame.image.slice(23))));
             webp.duration = frame.duration;
             return webp;
@@ -1170,7 +1170,7 @@ function GifRecorder(mediaStream) {
 
     // void start(optional long timeSlice)
     // timestamp to fire "ondataavailable"
-    this.start = function(timeSlice) {
+    this.start = function (timeSlice) {
         timeSlice = timeSlice || 1000;
 
         var imageWidth = this.videoWidth || 320;
@@ -1245,7 +1245,7 @@ function GifRecorder(mediaStream) {
         gifEncoder.stream().bin = [];
     };
 
-    this.stop = function() {
+    this.stop = function () {
         if (lastAnimationFrame) {
             cancelAnimationFrame(lastAnimationFrame);
             clearTimeout(timeout);
@@ -1253,8 +1253,8 @@ function GifRecorder(mediaStream) {
         }
     };
 
-    this.ondataavailable = function() {};
-    this.onstop = function() {};
+    this.ondataavailable = function () { };
+    this.onstop = function () { };
 
     // Reference to itself
     var self = this;
@@ -1265,7 +1265,7 @@ function GifRecorder(mediaStream) {
     var video = document.createElement('video');
     video.muted = true;
     video.autoplay = true;
-    video.src = URL.createObjectURL(mediaStream);
+    video.srcObject = mediaStream;// URL.createObjectURL(mediaStream);
     video.play();
 
     var lastAnimationFrame = null;
@@ -1288,7 +1288,7 @@ function MultiStreamRecorder(mediaStream) {
 
     // void start(optional long timeSlice)
     // timestamp to fire "ondataavailable"
-    this.start = function(timeSlice) {
+    this.start = function (timeSlice) {
         audioRecorder = new MediaStreamRecorder(mediaStream);
         videoRecorder = new MediaStreamRecorder(mediaStream);
 
@@ -1301,7 +1301,7 @@ function MultiStreamRecorder(mediaStream) {
             }
         }
 
-        audioRecorder.ondataavailable = function(blob) {
+        audioRecorder.ondataavailable = function (blob) {
             if (!audioVideoBlobs[recordingInterval]) {
                 audioVideoBlobs[recordingInterval] = {};
             }
@@ -1314,7 +1314,7 @@ function MultiStreamRecorder(mediaStream) {
             }
         };
 
-        videoRecorder.ondataavailable = function(blob) {
+        videoRecorder.ondataavailable = function (blob) {
             if (isFirefox) {
                 return self.ondataavailable({
                     video: blob,
@@ -1339,13 +1339,13 @@ function MultiStreamRecorder(mediaStream) {
             self.ondataavailable(blobs);
         }
 
-        videoRecorder.onstop = audioRecorder.onstop = function(error) {
+        videoRecorder.onstop = audioRecorder.onstop = function (error) {
             self.onstop(error);
         };
 
         if (!isFirefox) {
             // to make sure both audio/video are synced.
-            videoRecorder.onStartedDrawingNonBlankFrames = function() {
+            videoRecorder.onStartedDrawingNonBlankFrames = function () {
                 console.debug('Fired: onStartedDrawingNonBlankFrames');
                 videoRecorder.clearOldRecordedFrames();
                 audioRecorder.start(timeSlice);
@@ -1356,16 +1356,16 @@ function MultiStreamRecorder(mediaStream) {
         }
     };
 
-    this.stop = function() {
+    this.stop = function () {
         if (audioRecorder) audioRecorder.stop();
         if (videoRecorder) videoRecorder.stop();
     };
 
-    this.ondataavailable = function(blob) {
+    this.ondataavailable = function (blob) {
         console.log('ondataavailable..', blob);
     };
 
-    this.onstop = function(error) {
+    this.onstop = function (error) {
         console.warn('stopped..', error);
     };
 
